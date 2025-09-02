@@ -4,11 +4,11 @@ rm(list=ls())
 library(tidyverse)
 
 #Set working directory to folder where you have raw datasets (TO DO: Update folder name)
-setwd("~/Stanford Research/r01-qc-scripts/data-qc-082625")
+setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
 
 #Read in participant data (TO DO: update names of data files)
-data <- read_csv("HOTSPOTParticipantle_DATA_2025-08-26_1348.csv", guess_max = 3000)
-data_labels <- read_csv("HOTSPOTParticipantle_DATA_LABELS_2025-08-26_1351.csv", guess_max = 3000)
+data <- read_csv("HOTSPOTParticipantle_DATA_2025-09-02_1443.csv", guess_max = 3000)
+data_labels <- read_csv("HOTSPOTParticipantle_DATA_LABELS_2025-09-02_1444.csv", guess_max = 3000)
 
 ############################################################################################################################################
 #PART 1: Create .csv file of records with PID of incorrect number of digits (not following the XX-XXX-X format)

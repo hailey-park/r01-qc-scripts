@@ -15,7 +15,7 @@ data <- read_csv("~/Stanford Research/r01-qc-scripts/HOTSPOTCommunitySurv_DATA_2
 your_name_stanford_researcher <- "Hailey Park"
 
 #Create word doc to print qc output (TO DO: specify name of doc file)
-qc_doc <- RTF("QC-report-community-082825.doc")  # this can be an .rtf or a .doc
+qc_doc <- RTF("QC-report-community-090225.doc")  # this can be an .rtf or a .doc
 addHeader(qc_doc, paste0("HOTSPOTS Community Survey Automated Data QC Report"), font.size = 14)
 addText(qc_doc, paste0("\nDate: ", Sys.Date(), "\nStanford Researcher: ", your_name_stanford_researcher))
 
@@ -111,6 +111,6 @@ for(i in c(1:nrow(data_with_miracidia))){
 }
 
 #Write to csv (TO DO: update date of csv file)
-write.csv(miracidia_report, "QC-report-miracidia-082825.csv")
+write.csv(miracidia_report, "QC-report-miracidia-090225.csv")
 
 

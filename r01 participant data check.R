@@ -5,7 +5,7 @@ library(rtf)
 library(tidyverse)
 
 #Set working directory to folder where you have cleaned participant-level data (TO DO: Update folder name with correct date)
-setwd("~/Stanford Research/r01-qc-scripts/data-qc-082625")
+setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
 
 #Read in cleaned participant data
 cleaned_data <- read_csv("clean-data.csv")[,-1] 
@@ -20,7 +20,7 @@ data <- cleaned_data %>%
   filter(village_code == village_code)
 
 #Set working directory to folder where you want to store village QC reports (TO DO: Update folder name with correct date)
-setwd("~/Stanford Research/r01-qc-scripts/data-qc-082625/village-qc-reports")
+setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225/village-qc-reports")
 
 #Create word doc to print qc output (TO DO: Update doc name with correct village code and date)
 qc_doc <- RTF("QC-report-17-082725.doc")  # this can be an .rtf or a .doc

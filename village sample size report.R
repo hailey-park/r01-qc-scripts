@@ -4,7 +4,7 @@ rm(list=ls())
 library(tidyverse)
 
 #Set working directory to folder where you have cleaned participant-level data (TO DO: Update folder name with correct date)
-setwd("~/Stanford Research/r01-qc-scripts/data-qc-082625")
+setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
 
 #Read in cleaned participant data
 data <- read_csv("clean-data.csv")[,-1]
