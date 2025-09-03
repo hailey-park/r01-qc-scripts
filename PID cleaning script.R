@@ -52,9 +52,17 @@ write.csv(all_incorrect_village_ID_records, "PID-incorrect-villageID.csv")
 #PART 4: After reviewing PID inconsistencies (wrong digits, incorrect village ID), correct the original dataset
 
 #Read in corrected records
-corrected_PID_digits <- read_csv("PID-incorrect-digits-reviewed.csv", guess_max = 3000)[,-1] %>%
+corrected_PID_digits <- read_csv("PID-incorrect-digits-reviewed.csv", col_types = cols(
+  record_id = col_integer(),
+  `Corrected village code` = col_character(),
+  `Corrected PID` = col_character(),
+  .default = col_skip())) %>%
   select(record_id, `Corrected village code`, `Corrected PID`)
-corrected_PID_villageID <- read_csv("PID-incorrect-villageID-reviewed.csv", guess_max = 3000)[,-1] %>%
+corrected_PID_villageID <- read_csv("PID-incorrect-villageID-reviewed.csv", col_types = cols(
+  record_id = col_integer(),
+  `Corrected village code` = col_character(),
+  `Corrected PID` = col_character(),
+  .default = col_skip())) %>%
   select(record_id, `Corrected village code`, `Corrected PID`)
 
 
@@ -62,10 +70,10 @@ corrected_PID_villageID <- read_csv("PID-incorrect-villageID-reviewed.csv", gues
 corrected_data <- left_join(left_join(data, corrected_PID_digits, by = "record_id"),
                             corrected_PID_villageID, by = "record_id") %>%
   rowwise() %>%
-  mutate(village_code =  case_when(!is.na(`Corrected village code.x`) ~ `Corrected village code.x`,
+  mutate(village_code =  dplyr::case_when(!is.na(`Corrected village code.x`) ~ `Corrected village code.x`,
                                    !is.na(`Corrected village code.y`) ~ `Corrected village code.y`,
                                    TRUE ~ village_code),
-         participant_id_format = case_when(!is.na(`Corrected PID.x`) ~ `Corrected PID.x`,
+         participant_id_format = dplyr::case_when(!is.na(`Corrected PID.x`) ~ `Corrected PID.x`,
                                                !is.na(`Corrected PID.y`) ~ `Corrected PID.y`,
                                                TRUE ~ participant_id_format))
 
@@ -108,7 +116,7 @@ write.csv(combined_duplicate_records, "PID-duplicates-updated.csv")
   #remove NULL records from incorrect digits and village ID files
 records_NULL <- (corrected_PID_villageID %>% filter(is.na(`Corrected PID`)))$record_id
 
-  #remove records where all duplicates have no forms (except one set)
+  #remove records where all duplicates have no forms (except one set. we keep the set that is more "completed")
 records_duplicates_all_missing <- setdiff(all_missing_record_complete_form$record_id, 
                                           (corrected_data %>% 
                                              filter(participant_id_format %in% unique(all_missing_record_complete_form$participant_id_format)) %>%
@@ -118,7 +126,7 @@ records_duplicates_all_missing <- setdiff(all_missing_record_complete_form$recor
                                              distinct(participant_id_format, .keep_all = TRUE))$record_id)
 
 
-  #remove records where all duplicates have forms (except one set)
+  #remove records where all duplicates have forms (except one set. we keep the set that is more "completed")
 records_duplicates_all_multiple <- setdiff(all_multiple_records_complete_form$record_id, 
                                            (corrected_data %>% 
                                               filter(participant_id_format %in% unique(all_multiple_records_complete_form$participant_id_format)) %>%

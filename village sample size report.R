@@ -6,7 +6,7 @@ library(tidyverse)
 #Set working directory to folder where you have cleaned participant-level data (TO DO: Update folder name with correct date)
 setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
 
-#Read in cleaned participant data
+#Read in cleaned participant data (this cleaned data is from the `PID cleaning script.R`)
 data <- read_csv("clean-data.csv")[,-1]
 
 
@@ -23,8 +23,12 @@ sample_size <- age_groups_added %>% group_by(village_code, age_group) %>%
   pivot_wider(names_from = age_group, values_from = total) %>%
   rename(`Missing Age Data` = `NA`) %>%
   replace(is.na(.), 0) %>%
-  mutate(Total = rowSums(across(where(is.numeric)))) 
+  mutate(Total = rowSums(across(where(is.numeric))))
+
+#If `0-1 years` column is missing from the sample size dataframe (which only happens if there is no individuals 
+#0-1 years old), add the column to the dataframe
+if (!"0-1 years" %in% names(sample_size)) {sample_size$`0-1 years` <- 0}
 
 #Write to .csv
-write.csv(sample_size[,c(1,7,2,3,4,6,5)], "village-sample-sizes-updated.csv")
+write.csv(sample_size[,c(1,6,2,3,4,7,5)], "village-sample-sizes-report.csv")
 

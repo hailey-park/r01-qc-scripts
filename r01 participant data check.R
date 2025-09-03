@@ -7,25 +7,32 @@ library(tidyverse)
 #Set working directory to folder where you have cleaned participant-level data (TO DO: Update folder name with correct date)
 setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
 
-#Read in cleaned participant data
+#Read in cleaned participant data (this cleaned data is from the `PID cleaning script.R`)
 cleaned_data <- read_csv("clean-data.csv")[,-1] 
+
+#Create folder to store village QC reports and set the folder as the working directory
+dir.create("village-qc-reports")
+setwd("village-qc-reports")
+
+############################################################################################################################################
+#This automated script creates a participant-level QC report doc for a specified village. After specifying the village below,
+#you can run the entire bottom portion of this script (line 23 and below) to output the report file. The report docs should
+#populate in the `village-qc-reports` folder.
 
 #Fill in village name, village code (make sure it's 2 digits), and your name (TO DO: fill out!)
 village_name <- "SEGUIE"
-village_code <- "17"
+village_code_input <- "17"
 your_name_stanford_researcher <- "Hailey Park"
 
 #Filter specific village data
 data <- cleaned_data %>%
-  filter(village_code == village_code)
+  filter(village_code == village_code_input)
 
-#Set working directory to folder where you want to store village QC reports (TO DO: Update folder name with correct date)
-setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225/village-qc-reports")
 
-#Create word doc to print qc output (TO DO: Update doc name with correct village code and date)
-qc_doc <- RTF("QC-report-17-082725.doc")  # this can be an .rtf or a .doc
+#Create word doc to print qc output
+qc_doc <- RTF(paste0("QC-report-", village_code_input, "-", format(Sys.Date(), "%m%d%y"), ".doc"))  # this can be an .rtf or a .doc
 addHeader(qc_doc, paste0("HOTSPOTS Automated Data QC Report"), font.size = 14)
-addText(qc_doc, paste0("Village Name: ", village_name, "\nVillage ID: ", village_code, "\nDate: ", Sys.Date(), "\nStanford Researcher: ", your_name_stanford_researcher))
+addText(qc_doc, paste0("Village Name: ", village_name, "\nVillage ID: ", village_code_input, "\nDate: ", Sys.Date(), "\nStanford Researcher: ", your_name_stanford_researcher))
 
 #Print total enrollment numbers
 unduplicated_data <- data %>% distinct(record_id, .keep_all = TRUE) %>% filter(!participant_code %>% is.na())
@@ -215,19 +222,19 @@ for(i in c(1:nrow(unduplicated_data))){
   if(record$sample_urine_poc %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Individual Test Results survey - Urine POC-CCA results not reported - Missing (required)."))}
   if(!record$sample_urine_poc %>% is.na() & record$sample_urine_poc == 1 & record$poc_reader_urine %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Individual Test Results survey - Urine POC-CCA results, No score reported - Missing (required)."))}
 
-  #### check missing data survey (return of tests/treatment)
-  if(record$investigator_return %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Investigator selection question - Missing (required)."))}
-  if(record$investigator_return_oth %>% is.na() & !record$investigator_return %>% is.na() & record$investigator_return == 99){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Investigator selection (Other) question - Missing (required)."))}
-  if(record$participant_id_return %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - PID confirmation question - Missing (required)."))}
-  if(record$consent_confirm %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Consent question - Missing (required)."))}
-  if(record$test_return %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Return tests question - Missing (required)."))}
-  if(record$praz_offer %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment offered (praziquantel) question - Missing (required)."))}
-  if(!record$praz_offer %>% is.na() & record$praz_offer == 1 & record$praz_accept %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment accepted (praziquantel) question - Missing (required)."))}
-  if(((!record$praz_accept %>% is.na() & record$praz_accept == 1)) & record$praz_accept_num %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment accepted (praziquantel), quantity question - Missing (required)."))}
-  if(!record$praz_accept %>% is.na() & record$praz_accept == 0 & record$praz_refuse_reason %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment refused (praziquantel) - can you confirm this is correct?"))}
-  if(record$alb_offer %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment offered (albendazole) question - Missing (required)."))}
-  if(!record$alb_offer %>% is.na() & record$alb_offer == 1 & record$alb_accept %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment accepted (albendazole) question - Missing (required)."))}
-  if(!record$alb_accept %>% is.na() & record$alb_accept == 0 & record$alb_refuse_reason %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment refused (albendazole) - can you confirm this is correct?"))}
+  # #### check missing data survey (return of tests/treatment) (THIS IS INTENTIONALLY COMMENTED OUT FOR NOW)
+  # if(record$investigator_return %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Investigator selection question - Missing (required)."))}
+  # if(record$investigator_return_oth %>% is.na() & !record$investigator_return %>% is.na() & record$investigator_return == 99){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Investigator selection (Other) question - Missing (required)."))}
+  # if(record$participant_id_return %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - PID confirmation question - Missing (required)."))}
+  # if(record$consent_confirm %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Consent question - Missing (required)."))}
+  # if(record$test_return %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Return tests question - Missing (required)."))}
+  # if(record$praz_offer %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment offered (praziquantel) question - Missing (required)."))}
+  # if(!record$praz_offer %>% is.na() & record$praz_offer == 1 & record$praz_accept %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment accepted (praziquantel) question - Missing (required)."))}
+  # if(((!record$praz_accept %>% is.na() & record$praz_accept == 1)) & record$praz_accept_num %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment accepted (praziquantel), quantity question - Missing (required)."))}
+  # if(!record$praz_accept %>% is.na() & record$praz_accept == 0 & record$praz_refuse_reason %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment refused (praziquantel) - can you confirm this is correct?"))}
+  # if(record$alb_offer %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment offered (albendazole) question - Missing (required)."))}
+  # if(!record$alb_offer %>% is.na() & record$alb_offer == 1 & record$alb_accept %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment accepted (albendazole) question - Missing (required)."))}
+  # if(!record$alb_accept %>% is.na() & record$alb_accept == 0 & record$alb_refuse_reason %>% is.na()){addText(qc_doc, paste0("\n - ", pid, " - Return of Test Results and Treatment survey - Treatment refused (albendazole) - can you confirm this is correct?"))}
 
   #### check if all collected samples have reported test results
   if(!record$stool_1 %>% is.na() & record$stool_1 == 0 & (record$sample_stool1 == 0 | record$sample_stool1 %>% is.na())){addText(qc_doc, paste0("\n - ", pid, " - Individual Test Results survey - Stool sample (#1) was collected but test results not reported."))}

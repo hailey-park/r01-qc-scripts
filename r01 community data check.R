@@ -4,8 +4,11 @@ rm(list=ls())
 library(rtf)
 library(tidyverse)
 
-#Read in participant data (TO DO: update name of data file)
-data <- read_csv("~/Stanford Research/r01-qc-scripts/HOTSPOTCommunitySurv_DATA_2025-08-28_1921.csv")
+#Set working directory to folder where you have raw datasets (TO DO: Update folder name)
+setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
+
+#Read in community data (TO DO: update name of data file)
+data <- read_csv("HOTSPOTCommunitySurv_DATA_2025-09-02_1445.csv")
 
 ############################################################################################################################################
 #PART 1: Generate QC report for community-level database to check for anomaly records (e.g., duplicates or null)
@@ -14,8 +17,8 @@ data <- read_csv("~/Stanford Research/r01-qc-scripts/HOTSPOTCommunitySurv_DATA_2
 #Your name (TO DO: write your name)
 your_name_stanford_researcher <- "Hailey Park"
 
-#Create word doc to print qc output (TO DO: specify name of doc file)
-qc_doc <- RTF("QC-report-community-090225.doc")  # this can be an .rtf or a .doc
+#Create word doc to print qc output 
+qc_doc <- RTF(paste0("QC-report-community-", format(Sys.Date(), "%m%d%y"), ".doc"))  # this can be an .rtf or a .doc
 addHeader(qc_doc, paste0("HOTSPOTS Community Survey Automated Data QC Report"), font.size = 14)
 addText(qc_doc, paste0("\nDate: ", Sys.Date(), "\nStanford Researcher: ", your_name_stanford_researcher))
 
@@ -35,6 +38,7 @@ clean_data <- data %>% filter(!vil_code %>% is.na())
 
 #Create section for reporting form completeness
 addText(qc_doc, "\n\nPart 2: Setting and environmental risk forms marked as 'complete':", italic = TRUE)
+
 #Check each record (row-by-row)
 for(i in c(1:nrow(clean_data))){
   
@@ -44,7 +48,7 @@ for(i in c(1:nrow(clean_data))){
   #### check completeness of survey (based on complete question)
   if(record$setting_information_complete%>%is.na()|record$setting_information_complete==0){addText(qc_doc, paste0("\n - Village ", village_id, " (", record$vil_name, ") - Setting survey - Survey form is not marked as complete."))}
   if(record$environmental_risk_survey_complete==0|record$environmental_risk_survey_complete%>%is.na()){addText(qc_doc, paste0("\n - Village ", village_id, " (", record$vil_name, ") - Environmental Risk survey - Survey form is not marked as complete."))}
-  # if(record$pooling_test_results_complete%>%is.na()|record$pooling_test_results_complete==0){addText(qc_doc, paste0("\n - Village ", village_id, " (", record$vil_name, ") - Pooling Test survey - Survey form is not marked as complete."))}
+  # if(record$pooling_test_results_complete%>%is.na()|record$pooling_test_results_complete==0){addText(qc_doc, paste0("\n - Village ", village_id, " (", record$vil_name, ") - Pooling Test survey - Survey form is not marked as complete."))} (THIS IS INTENTIONALLY COMMENTED OUT)
 
 }
 
@@ -111,6 +115,6 @@ for(i in c(1:nrow(data_with_miracidia))){
 }
 
 #Write to csv (TO DO: update date of csv file)
-write.csv(miracidia_report, "QC-report-miracidia-090225.csv")
+write.csv(miracidia_report, paste0("QC-report-miracidia-", format(Sys.Date(), "%m%d%y"), ".csv"))
 
 
