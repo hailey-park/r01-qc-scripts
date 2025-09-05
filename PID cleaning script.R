@@ -147,7 +147,7 @@ all_records_to_remove <- c(records_NULL, records_duplicates_all_missing, records
 clean_data <- corrected_data %>% filter(!record_id %in% all_records_to_remove)
 
   #Create csv for all duplicates that will be deleted after review
-duplicates_to_delete_data <- corrected_data %>% filter(record_id %in% intersect(combined_duplicate_records$record_id, all_records_to_remove))
+duplicates_to_delete_data <- corrected_data %>% filter(record_id %in% intersect(combined_duplicate_records$record_id, all_records_to_remove)) %>% select(record_id, participant_id_format)
 
 #### write to csv
 write.csv(clean_data, "clean-data.csv")
