@@ -108,7 +108,7 @@ all_normal_duplicates <- semi_join(duplicates, normal_duplicate, by = c("partici
 combined_duplicate_records <- rbind(all_missing_record_complete_form, all_multiple_records_complete_form, all_normal_duplicates)
 
 #### write to csv
-write.csv(combined_duplicate_records, "PID-duplicates-updated.csv")
+write.csv(combined_duplicate_records, "PID-all-duplicates.csv")
 
 ############################################################################################################################################
 #PART 6: Remove most duplicate records and create a cleaned database to run the participant-level QC and sample size QC reports
@@ -146,8 +146,13 @@ all_records_to_remove <- c(records_NULL, records_duplicates_all_missing, records
   #Create csv for clean data
 clean_data <- corrected_data %>% filter(!record_id %in% all_records_to_remove)
 
+  #Create csv for all duplicates that will be deleted after review
+duplicates_to_delete_data <- corrected_data %>% filter(record_id %in% intersect(combined_duplicate_records$record_id, all_records_to_remove))
+
 #### write to csv
 write.csv(clean_data, "clean-data.csv")
+write.csv(duplicates_to_delete_data, "PID-duplicates-to-delete.csv")
+
 
 
 
