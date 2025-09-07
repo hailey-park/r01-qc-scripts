@@ -17,7 +17,7 @@ After downloading the datasets from REDCap and the R scripts in this repo, put e
 
   * `r01 participant data check.R`: This script creates a participant-level QC report doc for a specified village. You must manually specify the village that you want to run the QC report on. All QC report docs are populated in the `village-qc-reports` folder, which is inside the `data-qc-[DATE]` folder.
 
-  * `r01 community data check.R`: This script is split into 2 sections. The first section generates a QC report doc (`QC-report-community-[DATE].doc`) for the community-level database to check for anomaly records (e.g., duplicates or null) and check for completeness of forms. The second section generates a miracidia report (`QC-report-miracidia-[DATE].csv`)
+  * `r01 community data check.R`: This script is split into 2 sections. The first section generates a QC report doc (`QC-report-community-[DATE].doc`) for the community-level database to check for anomaly records (e.g., duplicates, null, mispelled, missing) and check for completeness of forms. The second section generates a miracidia report (`QC-report-miracidia-[DATE].csv`)
     
   * `data-qc-[DATE]`: this folder will hold the raw REDCap datasets and QC output files for the qc on this date. 
     * `HOTSPOTParticipantle_DATA_[DATE & TIME OF EXPORT].csv`
