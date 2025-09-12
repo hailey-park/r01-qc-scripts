@@ -20,8 +20,8 @@ setwd("village-qc-reports")
 #populate in the `village-qc-reports` folder.
 
 #Fill in village name, village code (make sure it's 2 digits), and your name (TO DO: fill out!)
-village_name <- "SEGUIE"
-village_code_input <- "17"
+village_name <- "OFFORIGUIE"
+village_code_input <- "14"
 your_name_stanford_researcher <- "Hailey Park"
 
 #Filter specific village data

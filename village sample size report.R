@@ -4,7 +4,7 @@ rm(list=ls())
 library(tidyverse)
 
 #Set working directory to folder where you have cleaned participant-level data (TO DO: Update folder name with correct date)
-setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
+setwd("~/Stanford Research/r01-qc-scripts/data-qc-091225")
 
 #Read in cleaned participant data (this cleaned data is from the `PID cleaning script.R`)
 data <- read_csv("clean-data.csv")[,-1]
@@ -21,7 +21,8 @@ age_groups_added <- data %>% mutate(age_group = case_when(as.numeric(age) %in% c
 sample_size <- age_groups_added %>% group_by(village_code, age_group) %>%
   summarise(total = n()) %>%
   pivot_wider(names_from = age_group, values_from = total) %>%
-  rename(`Missing Age Data` = `NA`) %>%
+  #rename(`Missing Age Data` = `NA`) %>% #if there are NAs
+  mutate(`Missing Age Data` = 0) %>% #if there are no NAs
   replace(is.na(.), 0) %>%
   mutate(Total = rowSums(across(where(is.numeric))))
 

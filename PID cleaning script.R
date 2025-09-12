@@ -4,13 +4,102 @@ rm(list=ls())
 library(tidyverse)
 
 #Set working directory to folder where you have raw datasets (TO DO: Update folder name)
-setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
+setwd("~/Stanford Research/r01-qc-scripts/data-qc-091225")
 
 #Read in participant data (TO DO: update names of data files)
-data <- read_csv("HOTSPOTParticipantle_DATA_2025-09-02_1443.csv", guess_max = 3000)
-data_labels <- read_csv("HOTSPOTParticipantle_DATA_LABELS_2025-09-02_1444.csv", guess_max = 3000)
+data <- read_csv("HOTSPOTParticipantle_DATA_2025-09-12_0915.csv",
+                 col_types = cols(
+                   participant_code = col_character(),
+                   household_code = col_character(),
+                   village_code = col_character(),
+                   household_code_format = col_character(),
+                   participant_id_format = col_character(),
+                   subdist_oth = col_character(),
+                   vil_oth = col_character(),
+                   date_enroll = col_date(),
+                   first_name = col_character(),
+                   last_name = col_character(),
+                   first_name_parent = col_character(),
+                   last_name_parent = col_character(),
+                   consent_pic = col_character(),
+                   assent_pic = col_character(),
+                   cert_pic = col_character(),
+                   dob = col_date(),
+                   date_collect_stool1 = col_date(),
+                   date_collect_stool2 = col_date(),
+                   date_collect_urine = col_date(),
+                   date_collect_dbs = col_date(),
+                   date_return = col_date(),
+                   dbs_id = col_character(),
+                   dbs_id_manual = col_character(),
+                   dbs_pic = col_character(),
+                   a_other_1 = col_character(),
+                   b_other_1 = col_character(),
+                   a_other_2 = col_character(),
+                   b_other_2 = col_character(),
+                   investigator_participant_oth = col_character(),
+                   investigator_sample_oth = col_character(),
+                   investigator_test_oth = col_character(),
+                   investigator_return_oth = col_character(),
+                   praz_refuse_reason = col_character(),
+                   alb_refuse_reason = col_character(),
+                   .default = col_double() 
+                 ))
+data_labels <- read_csv("HOTSPOTParticipantle_DATA_LABELS_2025-09-12_1004.csv", 
+                        col_types = cols(
+                          .default = col_character() 
+                        ))
 
-############################################################################################################################################
+#Read in participant data from smaller database for villages 4, 11, 13 (TO DO: update names of data files)
+#WARNING: The data file names are the same as the main database except the date/time of export. So be careful!
+#         The smaller database should have 664 records, the main database has 9,158 records.
+data_village_4_11_13 <- read_csv("HOTSPOTParticipantle_DATA_2025-09-12_0914.csv" ,
+                                 col_types = cols(
+                                   participant_code = col_character(),
+                                   household_code = col_character(),
+                                   village_code = col_character(),
+                                   household_code_format = col_character(),
+                                   participant_id_format = col_character(),
+                                   subdist_oth = col_character(),
+                                   vil_oth = col_character(),
+                                   date_enroll = col_date(),
+                                   first_name = col_character(),
+                                   last_name = col_character(),
+                                   first_name_parent = col_character(),
+                                   last_name_parent = col_character(),
+                                   consent_pic = col_character(),
+                                   assent_pic = col_character(),
+                                   cert_pic = col_character(),
+                                   dob = col_date(),
+                                   date_collect_stool1 = col_date(),
+                                   date_collect_stool2 = col_date(),
+                                   date_collect_urine = col_date(),
+                                   date_collect_dbs = col_date(),
+                                   date_return = col_date(),
+                                   dbs_id = col_character(),
+                                   dbs_id_manual = col_character(),
+                                   dbs_pic = col_character(),
+                                   a_other_1 = col_character(),
+                                   b_other_1 = col_character(),
+                                   a_other_2 = col_character(),
+                                   b_other_2 = col_character(),
+                                   investigator_participant_oth = col_character(),
+                                   investigator_sample_oth = col_character(),
+                                   investigator_test_oth = col_character(),
+                                   investigator_return_oth = col_character(),
+                                   praz_refuse_reason = col_character(),
+                                   alb_refuse_reason = col_character(),
+                                   .default = col_double()
+                                 ))
+data_labels_village_4_11_13 <- read_csv("HOTSPOTParticipantle_DATA_LABELS_2025-09-12_0914.csv", 
+                                        col_types = cols(
+                                          .default = col_character() 
+))
+
+#Replace main database with smaller database (4, 11, 13) records
+data[data_village_4_11_13$record_id,] <- data_village_4_11_13
+data_labels[data_labels_village_4_11_13$`ID d'enregistrement`,] <- data_labels_village_4_11_13
+#########################################)##################################################################################################
 #PART 1: Create .csv file of records with PID of incorrect number of digits (not following the XX-XXX-X format)
 
 #### check for records with incorrectly entered participant IDs (correct digits)
@@ -123,7 +212,7 @@ records_duplicates_all_missing <- setdiff(all_missing_record_complete_form$recor
                                              mutate(completeness = participant_enrollment_complete + sample_collection_record_complete + individual_test_results_complete) %>% 
                                              group_by(participant_id_format) %>%
                                              filter(completeness == max(completeness)) %>%
-                                             distinct(participant_id_format, .keep_all = TRUE))$record_id)
+                                             slice_tail())$record_id)
 
 
   #remove records where all duplicates have forms (except one set. we keep the set that is more "completed")
@@ -133,7 +222,7 @@ records_duplicates_all_multiple <- setdiff(all_multiple_records_complete_form$re
                                               mutate(completeness = participant_enrollment_complete + sample_collection_record_complete + individual_test_results_complete) %>% 
                                               group_by(participant_id_format) %>%
                                               filter(completeness == max(completeness)) %>%
-                                              distinct(participant_id_format, .keep_all = TRUE))$record_id)
+                                              slice_tail)$record_id)
 
 
   #remove duplicate records (keep duplicate with forms)
