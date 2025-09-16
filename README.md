@@ -6,6 +6,8 @@ This repository contains code to run the automated QC scripts for the REDCap HOT
 ## Data Access
 These scripts use data directly exported from the REDCap databases. Please talk with Nathan first to confirm IRB status and REDCap database access privileges. For the participant-level database, you need to export both the raw data (e.g., "HOTSPOTParticipantle_DATA_[DATE & TIME OF EXPORT].csv") and the associated labels (e.g., "HOTSPOTParticipantle_DATA_LABELS_[DATE & TIME OF EXPORT].csv"). For the community-level database, you only need to export the raw data (e.g., "HOTSPOTCommunitySurv_DATA_[DATE & TIME OF EXPORT].csv"). 
 
+NOTE: Since we split the participant-level database for the Agboville district into 2 databases, you will also need to pull the raw data and associated label data from the smaller database too (for villages 4, 11, 13, 14).
+
 
 ## Set Up and Structure
 After downloading the datasets from REDCap and the R scripts in this repo, put everything in one folder (naming convention I use is `r01-qc-scripts`. I would recommend a folder organization structure shown below (this is how my file paths are set up, but of course you can change this):
