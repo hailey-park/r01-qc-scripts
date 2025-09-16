@@ -5,7 +5,7 @@ library(rtf)
 library(tidyverse)
 
 #Set working directory to folder where you have cleaned participant-level data (TO DO: Update folder name with correct date)
-setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
+setwd("~/Stanford Research/r01-qc-scripts/data-qc-091225")
 
 #Read in cleaned participant data (this cleaned data is from the `PID cleaning script.R`)
 cleaned_data <- read_csv("clean-data.csv")[,-1] 
@@ -19,9 +19,9 @@ setwd("village-qc-reports")
 #you can run the entire bottom portion of this script (line 23 and below) to output the report file. The report docs should
 #populate in the `village-qc-reports` folder.
 
-#Fill in village name, village code (make sure it's 2 digits), and your name (TO DO: fill out!)
-village_name <- "OFFORIGUIE"
-village_code_input <- "14"
+#Fill in village name, village code (make sure it's 2 digits), and your name (TO DO: fill out each time!)
+village_name <- "BONIKRO"
+village_code_input <- "01"
 your_name_stanford_researcher <- "Hailey Park"
 
 #Filter specific village data

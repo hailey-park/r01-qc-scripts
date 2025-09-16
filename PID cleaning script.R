@@ -50,10 +50,10 @@ data_labels <- read_csv("HOTSPOTParticipantle_DATA_LABELS_2025-09-12_1004.csv",
                           .default = col_character() 
                         ))
 
-#Read in participant data from smaller database for villages 4, 11, 13 (TO DO: update names of data files)
+#Read in participant data from smaller database for villages 4, 11, 13, 14 (TO DO: update names of data files)
 #WARNING: The data file names are the same as the main database except the date/time of export. So be careful!
 #         The smaller database should have 664 records, the main database has 9,158 records.
-data_village_4_11_13 <- read_csv("HOTSPOTParticipantle_DATA_2025-09-12_0914.csv" ,
+data_village_4_11_13_14 <- read_csv("HOTSPOTParticipantle_DATA_2025-09-12_0914.csv" ,
                                  col_types = cols(
                                    participant_code = col_character(),
                                    household_code = col_character(),
@@ -91,14 +91,14 @@ data_village_4_11_13 <- read_csv("HOTSPOTParticipantle_DATA_2025-09-12_0914.csv"
                                    alb_refuse_reason = col_character(),
                                    .default = col_double()
                                  ))
-data_labels_village_4_11_13 <- read_csv("HOTSPOTParticipantle_DATA_LABELS_2025-09-12_0914.csv", 
+data_labels_village_4_11_13_14 <- read_csv("HOTSPOTParticipantle_DATA_LABELS_2025-09-12_0914.csv", 
                                         col_types = cols(
                                           .default = col_character() 
 ))
 
-#Replace main database with smaller database (4, 11, 13) records
-data[data_village_4_11_13$record_id,] <- data_village_4_11_13
-data_labels[data_labels_village_4_11_13$`ID d'enregistrement`,] <- data_labels_village_4_11_13
+#Replace main database with smaller database (4, 11, 13, 14) records
+data[data_village_4_11_13_14$record_id,] <- data_village_4_11_13_14
+data_labels[data_labels_village_4_11_13_14$`ID d'enregistrement`,] <- data_labels_village_4_11_13_14
 #########################################)##################################################################################################
 #PART 1: Create .csv file of records with PID of incorrect number of digits (not following the XX-XXX-X format)
 
@@ -135,7 +135,7 @@ all_incorrect_village_ID_records <- semi_join(village_ID_check, incorrect_villag
 write.csv(all_incorrect_village_ID_records, "PID-incorrect-villageID.csv")
 
 ############################################################################################################################################
-#PART 3: Manually review the PID inconsistencies (wrong digits, incorrect village ID) and update the dataset.
+#PART 3: Manually review the PID inconsistencies (wrong digits, incorrect village ID) and update the dataset (TO DO).
 #        After reviewing, save the .csv files as "[file-name]-reviewed.csv".
 ############################################################################################################################################
 #PART 4: After reviewing PID inconsistencies (wrong digits, incorrect village ID), correct the original dataset

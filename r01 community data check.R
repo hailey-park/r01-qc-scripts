@@ -5,10 +5,10 @@ library(rtf)
 library(tidyverse)
 
 #Set working directory to folder where you have raw datasets (TO DO: Update folder name)
-setwd("~/Stanford Research/r01-qc-scripts/data-qc-090225")
+setwd("~/Stanford Research/r01-qc-scripts/data-qc-091225")
 
 #Read in community data (TO DO: update name of data file)
-data <- read_csv("HOTSPOTCommunitySurv_DATA_2025-09-02_1445.csv")
+data <- read_csv("HOTSPOTCommunitySurv_DATA_2025-09-12_1707.csv")
 
 #Create dataframe of all villages and village codes to identify any villages without record (TO DO: Change village reference if running QC for a different district)
 village_reference <- data.frame(village_name = c("Bonikro", "N'Chompo", "Erymakouguié 1", "Banguié 1", "Ehouegue", "Ouanguié", "Grand Moutcho", 
