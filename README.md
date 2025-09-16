@@ -30,6 +30,7 @@ After downloading the datasets from REDCap and the R scripts in this repo, put e
   * `data-qc-[FUTURE DATE]`: you can keep making new folders for future QCs. 
 
 
+Most of these scripts are automated, but I have commented in the scripts "TO DO: ____" for any part that requires manual changes. This includes updating file names, file paths, village specificiations, etc.
 
 ## Contact 
 Please direct any questions to the study PI:
